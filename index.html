@@ -3,1168 +3,772 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#1a1a2e">
+<meta name="theme-color" content="#f2f2f7">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>GasRuta — App Gasero</title>
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>GasRuta</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-/* ===== VARIABLES ===== */
 :root {
-  --bg: #0d0d1a;
-  --bg2: #13132b;
-  --bg3: #1c1c38;
-  --card: #1e1e3f;
-  --card2: #252550;
-  --border: #2e2e5e;
-  --accent: #f97316;
-  --accent2: #fb923c;
-  --accentglow: rgba(249,115,22,0.25);
-  --blue: #6366f1;
-  --blueglow: rgba(99,102,241,0.2);
-  --green: #22c55e;
-  --red: #ef4444;
-  --yellow: #eab308;
-  --text: #e8e8f8;
-  --text2: #9898c8;
-  --text3: #5a5a8a;
-  --mono: 'IBM Plex Mono', monospace;
-  --head: 'Syne', sans-serif;
-  --r: 14px;
-  --r2: 10px;
-  --shadow: 0 4px 24px rgba(0,0,0,0.5);
-  --trans: all 0.18s cubic-bezier(.4,0,.2,1);
+  --bg:       #f2f2f7;
+  --bg2:      #ffffff;
+  --bg3:      #f2f2f7;
+  --card:     #ffffff;
+  --border:   #e5e5ea;
+  --border2:  #d1d1d6;
+  --accent:   #ff6b00;
+  --acc-lt:   #fff3eb;
+  --blue:     #007aff;
+  --blue-lt:  #e8f1ff;
+  --green:    #34c759;
+  --green-lt: #eafaf0;
+  --red:      #ff3b30;
+  --red-lt:   #fff0ef;
+  --yellow:   #ff9500;
+  --purple:   #af52de;
+  --text:     #1c1c1e;
+  --text2:    #3c3c43;
+  --text3:    #8e8e93;
+  --text4:    #c7c7cc;
+  --font:     'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --r:        16px;
+  --r2:       12px;
+  --shadow:   0 2px 12px rgba(0,0,0,0.07);
+  --trans:    all 0.18s cubic-bezier(.4,0,.2,1);
 }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{font-size:16px;height:100%}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100%;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+button{cursor:pointer;border:none;outline:none;font-family:var(--font)}
+input,select,textarea{font-family:var(--font);outline:none}
+::-webkit-scrollbar{width:0}
+#app{display:flex;flex-direction:column;min-height:100dvh}
 
-/* ===== RESET ===== */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-html { font-size: 16px; height: 100%; }
-body { font-family: var(--mono); background: var(--bg); color: var(--text); min-height: 100%; overflow-x: hidden; }
-button { cursor: pointer; border: none; outline: none; font-family: var(--mono); }
-input, select, textarea { font-family: var(--mono); outline: none; }
+/* HEADER */
+.header{position:sticky;top:0;z-index:100;background:rgba(242,242,247,0.92);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-bottom:.5px solid var(--border);padding:14px 20px 12px;display:flex;align-items:center}
+.logo{font-size:1.2rem;font-weight:800;color:var(--accent);letter-spacing:-.3px}
+.logo-sub{font-size:.68rem;font-weight:500;color:var(--text3);margin-top:1px}
+.hdr-r{margin-left:auto;text-align:right}
+.hdr-time{font-size:.95rem;font-weight:700;color:var(--text)}
+.hdr-date{font-size:.68rem;font-weight:500;color:var(--text3)}
 
-/* ===== SCROLLBAR ===== */
-::-webkit-scrollbar { width: 4px; } 
-::-webkit-scrollbar-track { background: var(--bg2); }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+/* NAV */
+.nav{position:fixed;bottom:0;left:0;right:0;z-index:200;background:rgba(255,255,255,0.95);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-top:.5px solid var(--border);display:flex;padding:6px 0 calc(6px + env(safe-area-inset-bottom))}
+.nav-btn{flex:1;padding:6px 2px 4px;display:flex;flex-direction:column;align-items:center;gap:2px;background:transparent;color:var(--text3);font-size:.6rem;font-weight:600;transition:var(--trans)}
+.nav-icon{font-size:1.45rem;line-height:1.1;transition:var(--trans)}
+.nav-btn.active{color:var(--accent)}
+.nav-btn.active .nav-icon{transform:scale(1.1)}
+.nav-btn:active{opacity:.6}
 
-/* ===== LAYOUT ===== */
-#app { display: flex; flex-direction: column; min-height: 100dvh; }
+/* PAGES */
+.page{display:none;flex:1;padding:16px 16px 100px;animation:fadeUp .2s ease}
+.page.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
-/* ===== HEADER ===== */
-.header {
-  position: sticky; top: 0; z-index: 100;
-  background: var(--bg); border-bottom: 1px solid var(--border);
-  padding: 12px 16px;
-  display: flex; align-items: center; gap: 10px;
-}
-.header-logo {
-  font-family: var(--head); font-weight: 800; font-size: 1.3rem;
-  color: var(--accent); letter-spacing: -0.5px;
-}
-.header-logo span { color: var(--text2); font-weight: 400; font-size: 0.75rem; display: block; margin-top: -4px; letter-spacing: 1px; text-transform: uppercase; }
-.header-date { margin-left: auto; font-size: 0.7rem; color: var(--text3); text-align: right; }
+/* SECTION TITLES */
+.sec-title{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text3);padding:0 4px;margin:18px 0 8px}
+.sec-title:first-child{margin-top:4px}
 
-/* ===== NAV ===== */
-.nav {
-  position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
-  background: var(--bg2); border-top: 1px solid var(--border);
-  display: flex;
-  padding-bottom: env(safe-area-inset-bottom);
-}
-.nav-btn {
-  flex: 1; padding: 10px 4px 8px;
-  display: flex; flex-direction: column; align-items: center; gap: 3px;
-  background: transparent; color: var(--text3);
-  font-size: 0.55rem; letter-spacing: 0.5px; text-transform: uppercase; font-family: var(--mono);
-  transition: var(--trans);
-  border-top: 2px solid transparent;
-}
-.nav-btn .nav-icon { font-size: 1.4rem; line-height: 1; }
-.nav-btn.active { color: var(--accent); border-top-color: var(--accent); }
-.nav-btn:active { transform: scale(0.94); }
+/* STAT CARDS */
+.stats-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.stats-row.t3{grid-template-columns:1fr 1fr 1fr}
+.stat-card{background:var(--card);border-radius:var(--r);padding:14px 13px;box-shadow:var(--shadow)}
+.stat-icon{font-size:1.4rem;display:block;margin-bottom:5px}
+.stat-lbl{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--text3);margin-bottom:2px}
+.stat-val{font-size:1.35rem;font-weight:800;letter-spacing:-.4px;line-height:1}
+.stat-sub{font-size:.62rem;color:var(--text3);margin-top:4px;font-weight:500}
+.v-income{color:var(--green)}.v-expense{color:var(--red)}.v-bpos{color:var(--blue)}.v-bneg{color:var(--red)}.v-orange{color:var(--accent)}.v-purple{color:var(--purple)}
 
-/* ===== PAGES ===== */
-.page { display: none; flex: 1; padding: 16px 16px 90px; animation: fadeIn 0.2s ease; }
-.page.active { display: block; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+/* CARD */
+.card{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden;margin-bottom:10px}
+.card-p{padding:16px}
 
-/* ===== CARDS ===== */
-.card {
-  background: var(--card); border: 1px solid var(--border); border-radius: var(--r);
-  padding: 16px; margin-bottom: 12px;
-}
-.card-sm { padding: 12px; }
+/* LIST ITEMS */
+.list-item{padding:13px 16px;display:flex;align-items:center;gap:12px;border-bottom:.5px solid var(--border);cursor:pointer;transition:var(--trans);background:var(--card)}
+.list-item:last-child{border-bottom:none}
+.list-item:active{background:var(--bg3)}
+.item-icon{width:40px;height:40px;border-radius:11px;background:var(--acc-lt);display:flex;align-items:center;justify-content:center;font-size:1.15rem;flex-shrink:0}
+.item-info{flex:1;min-width:0}
+.item-title{font-size:.9rem;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item-sub{font-size:.7rem;color:var(--text3);margin-top:2px;font-weight:500}
+.item-right{text-align:right;flex-shrink:0}
+.item-mxn{font-size:.95rem;font-weight:700;color:var(--accent)}
+.item-lit{font-size:.65rem;color:var(--text3);margin-top:2px}
+.chevron{color:var(--text4);font-size:.85rem;flex-shrink:0}
 
-/* ===== STATS ROW ===== */
-.stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
-.stats-row.three { grid-template-columns: 1fr 1fr 1fr; }
-.stat-card {
-  background: var(--card); border: 1px solid var(--border); border-radius: var(--r);
-  padding: 14px 12px; position: relative; overflow: hidden;
-}
-.stat-card::before {
-  content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
-}
-.stat-card.income::before { background: var(--green); }
-.stat-card.expense::before { background: var(--red); }
-.stat-card.balance::before { background: var(--blue); }
-.stat-label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text3); margin-bottom: 4px; }
-.stat-val { font-family: var(--head); font-size: 1.4rem; font-weight: 700; }
-.stat-val.income { color: var(--green); }
-.stat-val.expense { color: var(--red); }
-.stat-val.balance-pos { color: var(--blue); }
-.stat-val.balance-neg { color: var(--red); }
-.stat-sub { font-size: 0.6rem; color: var(--text3); margin-top: 2px; }
+/* EXPENSE ITEM */
+.exp-item{padding:13px 16px;display:flex;align-items:center;gap:12px;border-bottom:.5px solid var(--border)}
+.exp-item:last-child{border-bottom:none}
+.exp-icon{width:40px;height:40px;border-radius:11px;background:var(--red-lt);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.exp-lbl{font-size:.88rem;font-weight:600;color:var(--text)}
+.exp-note{font-size:.7rem;color:var(--text3);margin-top:2px}
+.exp-amt{font-size:.95rem;font-weight:700;color:var(--red);flex-shrink:0}
 
-/* ===== SECTION TITLE ===== */
-.sec-title {
-  font-family: var(--head); font-weight: 700; font-size: 0.85rem;
-  color: var(--text2); text-transform: uppercase; letter-spacing: 1.5px;
-  margin-bottom: 10px; margin-top: 4px;
-  display: flex; align-items: center; gap: 6px;
-}
-.sec-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+/* FAB */
+.fab{position:fixed;right:20px;bottom:80px;z-index:150;width:54px;height:54px;border-radius:17px;background:var(--accent);color:#fff;font-size:1.65rem;line-height:1;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(255,107,0,.4);transition:var(--trans)}
+.fab:active{transform:scale(.91)}
 
-/* ===== SALE ITEM ===== */
-.sale-item {
-  background: var(--card); border: 1px solid var(--border); border-radius: var(--r2);
-  padding: 12px 14px; margin-bottom: 8px;
-  display: flex; align-items: center; gap: 12px;
-  animation: slideIn 0.2s ease;
-}
-@keyframes slideIn { from { opacity: 0; transform: translateX(-8px); } to { opacity: 1; transform: translateX(0); } }
-.sale-dot {
-  width: 40px; height: 40px; border-radius: 10px; background: var(--bg3);
-  display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
-  flex-shrink: 0; border: 1px solid var(--border);
-}
-.sale-info { flex: 1; min-width: 0; }
-.sale-ref { font-size: 0.85rem; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.sale-meta { font-size: 0.7rem; color: var(--text3); margin-top: 2px; }
-.sale-amount { text-align: right; flex-shrink: 0; }
-.sale-mxn { font-family: var(--head); font-size: 1rem; font-weight: 700; color: var(--accent); }
-.sale-liters { font-size: 0.65rem; color: var(--text3); margin-top: 1px; }
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.35);align-items:flex-end}
+.modal-overlay.open{display:flex;animation:bgFade .18s ease}
+@keyframes bgFade{from{background:rgba(0,0,0,0)}to{background:rgba(0,0,0,.35)}}
+.modal{background:var(--bg2);border-radius:22px 22px 0 0;width:100%;max-height:94dvh;overflow-y:auto;padding:12px 20px 36px;animation:sheetUp .22s cubic-bezier(.4,0,.2,1)}
+@keyframes sheetUp{from{transform:translateY(40px);opacity:.6}to{transform:translateY(0);opacity:1}}
+.handle{width:36px;height:4px;background:var(--border2);border-radius:2px;margin:0 auto 18px}
+.modal-title{font-size:1.25rem;font-weight:800;letter-spacing:-.2px;color:var(--text);margin-bottom:18px}
+.modal-step{font-size:.65rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
 
-/* ===== FAB ===== */
-.fab {
-  position: fixed; right: 18px; bottom: 72px; z-index: 150;
-  width: 58px; height: 58px; border-radius: 18px;
-  background: var(--accent); color: #fff;
-  font-size: 1.8rem; line-height: 1;
-  display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 4px 20px rgba(249,115,22,0.45);
-  transition: var(--trans);
-  font-family: inherit;
-}
-.fab:active { transform: scale(0.92); }
+/* STEPS */
+.steps{display:flex;gap:6px;margin-bottom:20px}
+.sdot{flex:1;height:4px;border-radius:2px;background:var(--border2);transition:var(--trans)}
+.sdot.active{background:var(--accent)}.sdot.done{background:var(--green)}
 
-/* ===== MODAL ===== */
-.modal-overlay {
-  display: none; position: fixed; inset: 0; z-index: 500;
-  background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
-  align-items: flex-end;
-}
-.modal-overlay.open { display: flex; animation: fadeIn 0.15s ease; }
-.modal {
-  background: var(--bg2); border-radius: 22px 22px 0 0;
-  border: 1px solid var(--border); border-bottom: none;
-  width: 100%; max-height: 92dvh; overflow-y: auto;
-  padding: 20px 18px 32px;
-  animation: slideUp 0.22s cubic-bezier(.4,0,.2,1);
-}
-@keyframes slideUp { from { transform: translateY(30px); } to { transform: translateY(0); } }
-.modal-handle { width: 36px; height: 4px; background: var(--border); border-radius: 2px; margin: 0 auto 16px; }
-.modal-title { font-family: var(--head); font-weight: 800; font-size: 1.3rem; margin-bottom: 18px; }
-.modal-step { font-size: 0.65rem; color: var(--accent); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 4px; }
+/* FORMS */
+.fg{margin-bottom:14px}
+.flbl{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--text3);margin-bottom:5px;display:block}
+.finput,.fsel{width:100%;background:var(--bg3);border:1.5px solid var(--border);border-radius:var(--r2);color:var(--text);padding:13px 14px;font-size:1rem;font-weight:500;transition:var(--trans);-webkit-appearance:none;appearance:none}
+.finput::placeholder{color:var(--text4)}
+.finput:focus,.fsel:focus{border-color:var(--accent);background:var(--card);box-shadow:0 0 0 3px rgba(255,107,0,.1)}
+.fsel{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238e8e93' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;background-size:18px;padding-right:40px}
+.fsel option{background:#fff}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fhint{font-size:.65rem;color:var(--text3);margin-top:4px;font-weight:500}
 
-/* ===== FORMS ===== */
-.form-group { margin-bottom: 14px; }
-.form-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text3); margin-bottom: 6px; display: block; }
-.form-input, .form-select {
-  width: 100%; background: var(--bg3); border: 1px solid var(--border);
-  border-radius: 10px; color: var(--text); padding: 13px 14px;
-  font-size: 1rem; transition: var(--trans);
-}
-.form-input:focus, .form-select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accentglow); }
-.form-select option { background: var(--bg3); }
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.form-hint { font-size: 0.65rem; color: var(--text3); margin-top: 4px; }
+/* BUTTONS */
+.btn{width:100%;padding:15px;border-radius:var(--r2);font-family:var(--font);font-weight:700;font-size:1rem;transition:var(--trans)}
+.btn:active{transform:scale(.97);opacity:.85}
+.btn-p{background:var(--accent);color:#fff;box-shadow:0 3px 12px rgba(255,107,0,.28)}
+.btn-s{background:var(--bg3);color:var(--text2);border:1.5px solid var(--border2)}
+.btn-g{background:var(--green);color:#fff;box-shadow:0 3px 12px rgba(52,199,89,.28)}
+.btn-row{display:flex;gap:10px;margin-top:14px}
+.btn-row .btn{margin:0}
 
-/* ===== BUTTONS ===== */
-.btn {
-  width: 100%; padding: 15px; border-radius: 12px;
-  font-family: var(--head); font-weight: 700; font-size: 1rem;
-  letter-spacing: 0.5px; transition: var(--trans);
-}
-.btn:active { transform: scale(0.97); }
-.btn-primary { background: var(--accent); color: #fff; box-shadow: 0 4px 14px var(--accentglow); }
-.btn-primary:hover { background: var(--accent2); }
-.btn-secondary { background: var(--card2); color: var(--text2); border: 1px solid var(--border); }
-.btn-ghost { background: transparent; color: var(--text3); }
-.btn-green { background: var(--green); color: #fff; }
-.btn-sm { padding: 10px 14px; font-size: 0.85rem; width: auto; }
-.btn-row { display: flex; gap: 10px; margin-top: 14px; }
-.btn-row .btn { margin: 0; }
+/* GPS BADGE */
+.gps-badge{display:flex;align-items:center;gap:10px;background:var(--bg3);border:1.5px solid var(--border);border-radius:var(--r2);padding:11px 13px;margin-bottom:14px}
+.gps-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.gps-dot.srch{background:var(--yellow);animation:blink 1s infinite}
+.gps-dot.ok{background:var(--green)}
+.gps-dot.err{background:var(--red)}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+.gps-txt{font-size:.8rem;font-weight:500;color:var(--text2)}
 
-/* ===== GPS STATUS ===== */
-.gps-badge {
-  display: inline-flex; align-items: center; gap: 6px;
-  background: var(--bg3); border: 1px solid var(--border); border-radius: 8px;
-  padding: 8px 12px; font-size: 0.75rem; color: var(--text2);
-  width: 100%; margin-bottom: 14px;
-}
-.gps-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--text3); flex-shrink: 0; }
-.gps-dot.searching { background: var(--yellow); animation: pulse 1s infinite; }
-.gps-dot.found { background: var(--green); }
-.gps-dot.error { background: var(--red); }
-@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+/* CLIENT OPTIONS */
+.copt{background:var(--card);border:1.5px solid var(--border);border-radius:var(--r2);padding:12px 14px;margin-bottom:8px;cursor:pointer;transition:var(--trans);display:flex;align-items:center;gap:11px}
+.copt:active{transform:scale(.98)}
+.copt.sel{border-color:var(--accent);background:var(--acc-lt)}
+.cdist{font-size:.7rem;font-weight:700;color:var(--accent);flex-shrink:0}
+.cref{font-size:.9rem;font-weight:600;color:var(--text)}
+.ccoord{font-size:.63rem;color:var(--text3);margin-top:2px}
 
-/* ===== CLIENT LIST ===== */
-.client-option {
-  background: var(--bg3); border: 1px solid var(--border); border-radius: 10px;
-  padding: 12px 14px; margin-bottom: 8px; cursor: pointer; transition: var(--trans);
-  display: flex; align-items: center; gap: 12px;
-}
-.client-option:active { transform: scale(0.98); }
-.client-option.selected { border-color: var(--accent); background: var(--accentglow); }
-.client-dist { font-size: 0.65rem; color: var(--accent); font-weight: 600; }
-.client-ref { font-size: 0.9rem; font-weight: 600; }
-.client-coords { font-size: 0.62rem; color: var(--text3); }
-.client-icon { font-size: 1.4rem; }
+/* ALERT BANNERS */
+.alert{border-radius:var(--r2);padding:12px 13px;margin-bottom:12px;display:flex;align-items:flex-start;gap:9px}
+.alert-blue{background:var(--blue-lt)}.alert-orange{background:var(--acc-lt)}.alert-green{background:var(--green-lt)}
+.alert-icon{font-size:1rem;flex-shrink:0;margin-top:1px}
+.alert-txt{font-size:.78rem;font-weight:500;color:var(--text2);line-height:1.5}
 
-/* ===== EXPENSE ITEM ===== */
-.expense-item {
-  background: var(--card); border: 1px solid var(--border); border-radius: var(--r2);
-  padding: 12px 14px; margin-bottom: 8px;
-  display: flex; align-items: center; gap: 12px;
-}
-.exp-icon { width: 38px; height: 38px; background: rgba(239,68,68,0.15); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
-.exp-info { flex: 1; }
-.exp-type { font-size: 0.85rem; font-weight: 600; }
-.exp-date { font-size: 0.65rem; color: var(--text3); }
-.exp-amount { font-family: var(--head); font-size: 1rem; font-weight: 700; color: var(--red); }
+/* FILTER BAR */
+.filter-bar{display:flex;gap:7px;margin-bottom:12px;overflow-x:auto;padding:2px 0 6px}
+.chip{padding:7px 15px;border-radius:20px;border:none;background:var(--card);color:var(--text3);font-size:.78rem;font-weight:600;white-space:nowrap;font-family:var(--font);box-shadow:var(--shadow);transition:var(--trans)}
+.chip.active{background:var(--accent);color:#fff}
+.chip:active{opacity:.7}
 
-/* ===== MAP AREA ===== */
-#map-container {
-  background: var(--card); border: 1px solid var(--border); border-radius: var(--r);
-  height: 320px; overflow: hidden; position: relative; margin-bottom: 12px;
-}
-#map-canvas { width: 100%; height: 100%; }
-.map-legend {
-  position: absolute; bottom: 10px; left: 10px;
-  background: rgba(13,13,26,0.85); border: 1px solid var(--border);
-  border-radius: 8px; padding: 8px 10px; font-size: 0.65rem;
-  display: flex; flex-direction: column; gap: 4px;
-}
-.legend-item { display: flex; align-items: center; gap: 6px; color: var(--text2); }
-.legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+/* EMPTY */
+.empty{text-align:center;padding:48px 20px;color:var(--text3)}
+.empty-icon{font-size:3.2rem;margin-bottom:10px}
+.empty-h{font-size:.95rem;font-weight:700;color:var(--text2);margin-bottom:5px}
+.empty-t{font-size:.8rem;line-height:1.5}
 
-/* ===== TAGS ===== */
-.tag {
-  display: inline-flex; align-items: center; gap: 4px;
-  padding: 3px 8px; border-radius: 6px; font-size: 0.65rem; font-weight: 600;
-}
-.tag-gas { background: rgba(249,115,22,0.2); color: var(--accent); }
-.tag-new { background: rgba(99,102,241,0.2); color: var(--blue); }
+/* HISTORY ROWS */
+.hrow{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:.5px solid var(--border)}
+.hrow:last-child{border-bottom:none}
+.hlbl{font-size:.83rem;color:var(--text3);font-weight:500}
+.hval{font-size:.83rem;font-weight:700;color:var(--text);text-align:right}
 
-/* ===== EMPTY STATE ===== */
-.empty {
-  text-align: center; padding: 40px 20px; color: var(--text3);
-}
-.empty-icon { font-size: 3rem; margin-bottom: 10px; }
-.empty-txt { font-size: 0.85rem; }
+/* MAP */
+#map-box{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden;height:300px;position:relative;margin-bottom:10px}
+#map-cv{width:100%;height:100%;display:block}
+.map-leg{position:absolute;top:10px;right:10px;background:rgba(255,255,255,.92);border-radius:10px;padding:8px 10px;font-size:.63rem;font-weight:600;display:flex;flex-direction:column;gap:5px;box-shadow:var(--shadow)}
+.leg-item{display:flex;align-items:center;gap:6px;color:var(--text2)}
+.leg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 
-/* ===== FILTER BAR ===== */
-.filter-bar { display: flex; gap: 8px; margin-bottom: 12px; overflow-x: auto; padding-bottom: 4px; }
-.filter-btn {
-  padding: 7px 14px; border-radius: 8px; border: 1px solid var(--border);
-  background: var(--card); color: var(--text3); font-size: 0.72rem;
-  white-space: nowrap; font-family: var(--mono); transition: var(--trans);
-}
-.filter-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+/* SEARCH */
+.search-wrap{position:relative;margin-bottom:12px}
+.search-wrap .finput{padding-left:40px}
+.search-icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:.95rem;pointer-events:none}
 
-/* ===== STEP INDICATOR ===== */
-.steps { display: flex; gap: 6px; margin-bottom: 18px; }
-.step-dot {
-  flex: 1; height: 4px; border-radius: 2px; background: var(--border); transition: var(--trans);
-}
-.step-dot.active { background: var(--accent); }
-.step-dot.done { background: var(--green); }
+/* TOAST */
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--text);color:#fff;border-radius:20px;padding:10px 18px;font-size:.82rem;font-weight:600;z-index:600;display:flex;align-items:center;gap:8px;animation:toastPop .2s ease;white-space:nowrap;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+@keyframes toastPop{from{opacity:0;transform:translateX(-50%) scale(.88)}to{opacity:1;transform:translateX(-50%) scale(1)}}
 
-/* ===== TOAST ===== */
-.toast {
-  position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
-  background: var(--card2); border: 1px solid var(--border); border-radius: 12px;
-  padding: 12px 18px; font-size: 0.85rem; z-index: 600;
-  display: flex; align-items: center; gap: 8px;
-  animation: toastIn 0.2s ease; white-space: nowrap;
-  box-shadow: var(--shadow);
-}
-@keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(10px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+/* DIVIDER */
+.div{height:.5px;background:var(--border);margin:4px 0}
 
-/* ===== HISTORY DETAIL ===== */
-.history-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 0.8rem; }
-.history-row:last-child { border-bottom: none; }
-.history-label { color: var(--text3); }
-.history-val { color: var(--text); font-weight: 600; }
-
-/* ===== LOADING ===== */
-.spinner {
-  width: 20px; height: 20px; border: 2px solid var(--border);
-  border-top-color: var(--accent); border-radius: 50%;
-  animation: spin 0.7s linear infinite; display: inline-block;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-
-.text-center { text-align: center; }
-.text-muted { color: var(--text3); }
-.text-sm { font-size: 0.78rem; }
-.mt-2 { margin-top: 8px; }
-.mb-2 { margin-bottom: 8px; }
-.flex { display: flex; }
-.items-center { align-items: center; }
-.gap-2 { gap: 8px; }
-.w-full { width: 100%; }
-
-/* ===== SEARCH INPUT ===== */
-.search-wrap { position: relative; margin-bottom: 12px; }
-.search-wrap input { padding-left: 38px; }
-.search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text3); font-size: 1rem; pointer-events: none; }
+/* UTILS */
+.mt-1{margin-top:4px}.mt-2{margin-top:10px}.mt-3{margin-top:16px}.mb-1{margin-bottom:6px}.mb-2{margin-bottom:10px}.fw-7{font-weight:700}.t-sm{font-size:.78rem}.t-xs{font-size:.66rem}.t-c{text-align:center}.t-mut{color:var(--text3)}.t-acc{color:var(--accent)}.t-green{color:var(--green)}.t-red{color:var(--red)}.t-blue{color:var(--blue)}
 </style>
 </head>
 <body>
 <div id="app">
 
-  <!-- HEADER -->
-  <header class="header">
-    <div>
-      <div class="header-logo">⛽ GasRuta</div>
-      <span class="header-logo" style="font-size:0.7rem;font-weight:400;color:var(--text3);font-family:var(--mono);display:block">APP GASERO MVP</span>
-    </div>
-    <div class="header-date" id="header-date"></div>
-  </header>
-
-  <!-- PAGE: DASHBOARD -->
-  <div id="page-dashboard" class="page active">
-    <div class="stats-row">
-      <div class="stat-card income">
-        <div class="stat-label">💰 Ingresos</div>
-        <div class="stat-val income" id="stat-income">$0</div>
-        <div class="stat-sub" id="stat-income-sub">0 ventas</div>
-      </div>
-      <div class="stat-card expense">
-        <div class="stat-label">💸 Egresos</div>
-        <div class="stat-val expense" id="stat-expense">$0</div>
-        <div class="stat-sub" id="stat-expense-sub">0 gastos</div>
-      </div>
-    </div>
-    <div class="stats-row three">
-      <div class="stat-card balance">
-        <div class="stat-label">📊 Balance</div>
-        <div class="stat-val balance-pos" id="stat-balance">$0</div>
-      </div>
-      <div class="stat-card" style="--c:var(--accent)">
-        <div class="stat-label">⛽ Litros</div>
-        <div class="stat-val" style="color:var(--accent)" id="stat-liters">0 L</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">👥 Clientes</div>
-        <div class="stat-val" style="color:var(--blue)" id="stat-clients">0</div>
-      </div>
-    </div>
-
-    <div class="sec-title">Ventas de hoy</div>
-    <div id="sales-list">
-      <div class="empty"><div class="empty-icon">📋</div><div class="empty-txt">Aún no hay ventas hoy<br>Presiona ＋ para registrar una</div></div>
-    </div>
+<!-- HEADER -->
+<header class="header">
+  <div>
+    <div class="logo">⛽ GasRuta</div>
+    <div class="logo-sub">App Gasero</div>
   </div>
-
-  <!-- PAGE: CLIENTES -->
-  <div id="page-clients" class="page">
-    <div class="sec-title">Todos los clientes</div>
-    <div class="search-wrap">
-      <span class="search-icon">🔍</span>
-      <input class="form-input" id="search-clients" placeholder="Buscar por referencia..." oninput="renderClientsList()">
-    </div>
-    <div id="clients-list"></div>
+  <div class="hdr-r">
+    <div class="hdr-time" id="htime"></div>
+    <div class="hdr-date" id="hdate"></div>
   </div>
+</header>
 
-  <!-- PAGE: MAPA -->
-  <div id="page-map" class="page">
-    <div class="sec-title">Mapa de clientes</div>
-    <div id="map-container">
-      <canvas id="map-canvas"></canvas>
-      <div class="map-legend">
-        <div class="legend-item"><div class="legend-dot" style="background:#f97316"></div> Cliente</div>
-        <div class="legend-item"><div class="legend-dot" style="background:#6366f1"></div> Mi posición</div>
-      </div>
-    </div>
-    <div class="card card-sm">
-      <div class="sec-title" style="margin-bottom:6px">Zonas frecuentes</div>
-      <div id="zones-list" class="text-muted text-sm">Calculando zonas...</div>
-    </div>
-    <div class="card card-sm">
-      <div class="sec-title" style="margin-bottom:6px">Ruta sugerida</div>
-      <div id="route-suggestion" class="text-muted text-sm">Registra más ventas para generar una ruta.</div>
-    </div>
+<!-- DASHBOARD -->
+<div id="page-dashboard" class="page active">
+  <div class="stats-row">
+    <div class="stat-card"><span class="stat-icon">💰</span><div class="stat-lbl">Ingresos</div><div class="stat-val v-income" id="si">$0</div><div class="stat-sub" id="si-s">0 ventas</div></div>
+    <div class="stat-card"><span class="stat-icon">💸</span><div class="stat-lbl">Egresos</div><div class="stat-val v-expense" id="se">$0</div><div class="stat-sub" id="se-s">0 gastos</div></div>
   </div>
-
-  <!-- PAGE: HISTORIAL -->
-  <div id="page-history" class="page">
-    <div class="sec-title">Historial</div>
-    <div class="filter-bar">
-      <button class="filter-btn active" onclick="setHistFilter('all', this)">Todos</button>
-      <button class="filter-btn" onclick="setHistFilter('today', this)">Hoy</button>
-      <button class="filter-btn" onclick="setHistFilter('week', this)">Esta semana</button>
-      <button class="filter-btn" onclick="setHistFilter('month', this)">Este mes</button>
-    </div>
-    <div id="history-list"></div>
+  <div class="stats-row t3">
+    <div class="stat-card"><span class="stat-icon">📊</span><div class="stat-lbl">Balance</div><div class="stat-val v-bpos" id="sb">$0</div></div>
+    <div class="stat-card"><span class="stat-icon">⛽</span><div class="stat-lbl">Litros</div><div class="stat-val v-orange" id="sl">0</div></div>
+    <div class="stat-card"><span class="stat-icon">👥</span><div class="stat-lbl">Clientes</div><div class="stat-val v-purple" id="sc">0</div></div>
   </div>
+  <div class="sec-title">Ventas de hoy</div>
+  <div class="card" id="sales-card"><div id="sales-list"></div></div>
+</div>
 
-  <!-- PAGE: EGRESOS -->
-  <div id="page-expenses" class="page">
-    <div class="stat-card expense" style="margin-bottom:12px">
-      <div class="stat-label">💸 Egresos del mes</div>
-      <div class="stat-val expense" id="monthly-expense">$0</div>
-    </div>
-    <button class="btn btn-primary mb-2" onclick="openExpenseModal()">+ Registrar Gasto</button>
-    <div class="sec-title">Gastos recientes</div>
-    <div id="expenses-list">
-      <div class="empty"><div class="empty-icon">💸</div><div class="empty-txt">Sin gastos registrados</div></div>
-    </div>
+<!-- CLIENTES -->
+<div id="page-clients" class="page">
+  <div class="search-wrap"><span class="search-icon">🔍</span><input class="finput" id="srch" placeholder="Buscar cliente..." oninput="renderClients()"></div>
+  <div id="clients-wrap"><div class="card" id="clients-list"></div></div>
+</div>
+
+<!-- MAPA -->
+<div id="page-map" class="page">
+  <div id="map-box"><canvas id="map-cv"></canvas><div class="map-leg"><div class="leg-item"><div class="leg-dot" style="background:var(--accent)"></div>Cliente</div><div class="leg-item"><div class="leg-dot" style="background:var(--blue)"></div>Mi posición</div></div></div>
+  <div class="sec-title">Zonas frecuentes</div>
+  <div class="card card-p" id="zones"></div>
+  <div class="sec-title">Ruta sugerida</div>
+  <div class="card card-p" id="route"></div>
+</div>
+
+<!-- HISTORIAL -->
+<div id="page-history" class="page">
+  <div class="filter-bar">
+    <button class="chip active" onclick="setF('all',this)">Todos</button>
+    <button class="chip" onclick="setF('today',this)">Hoy</button>
+    <button class="chip" onclick="setF('week',this)">Semana</button>
+    <button class="chip" onclick="setF('month',this)">Mes</button>
   </div>
+  <div class="card" id="hist-list"></div>
+</div>
 
-</div><!-- /app -->
+<!-- EGRESOS -->
+<div id="page-expenses" class="page">
+  <div class="stats-row">
+    <div class="stat-card"><span class="stat-icon">📅</span><div class="stat-lbl">Este mes</div><div class="stat-val v-expense" id="em">$0</div></div>
+    <div class="stat-card"><span class="stat-icon">📆</span><div class="stat-lbl">Hoy</div><div class="stat-val v-expense" id="et">$0</div></div>
+  </div>
+  <button class="btn btn-p mb-2" onclick="openExp()">+ Registrar Gasto</button>
+  <div class="sec-title">Gastos recientes</div>
+  <div class="card" id="exp-list"></div>
+</div>
+
+</div>
 
 <!-- FAB -->
-<button class="fab" onclick="openSaleModal()" id="fab-btn" title="Nueva venta">＋</button>
+<button class="fab" id="fab" onclick="openSale()">＋</button>
 
 <!-- NAV -->
 <nav class="nav">
-  <button class="nav-btn active" onclick="showPage('dashboard',this)" id="nav-dashboard">
-    <span class="nav-icon">🏠</span> Inicio
-  </button>
-  <button class="nav-btn" onclick="showPage('clients',this)" id="nav-clients">
-    <span class="nav-icon">👥</span> Clientes
-  </button>
-  <button class="nav-btn" onclick="showPage('map',this)" id="nav-map">
-    <span class="nav-icon">🗺️</span> Mapa
-  </button>
-  <button class="nav-btn" onclick="showPage('history',this)" id="nav-history">
-    <span class="nav-icon">📋</span> Historial
-  </button>
-  <button class="nav-btn" onclick="showPage('expenses',this)" id="nav-expenses">
-    <span class="nav-icon">💸</span> Egresos
-  </button>
+  <button class="nav-btn active" onclick="goPage('dashboard',this)"><span class="nav-icon">🏠</span>Inicio</button>
+  <button class="nav-btn" onclick="goPage('clients',this)"><span class="nav-icon">👥</span>Clientes</button>
+  <button class="nav-btn" onclick="goPage('map',this)"><span class="nav-icon">🗺️</span>Mapa</button>
+  <button class="nav-btn" onclick="goPage('history',this)"><span class="nav-icon">📋</span>Historial</button>
+  <button class="nav-btn" onclick="goPage('expenses',this)"><span class="nav-icon">💸</span>Egresos</button>
 </nav>
 
-<!-- MODAL: NUEVA VENTA -->
-<div class="modal-overlay" id="sale-modal">
+<!-- MODAL VENTA -->
+<div class="modal-overlay" id="m-sale">
   <div class="modal">
-    <div class="modal-handle"></div>
-    <div class="steps" id="sale-steps">
-      <div class="step-dot active" id="sdot-1"></div>
-      <div class="step-dot" id="sdot-2"></div>
-      <div class="step-dot" id="sdot-3"></div>
-    </div>
-    <div id="sale-step-content"></div>
+    <div class="handle"></div>
+    <div class="steps"><div class="sdot active" id="d1"></div><div class="sdot" id="d2"></div><div class="sdot" id="d3"></div></div>
+    <div id="sale-body"></div>
   </div>
 </div>
 
-<!-- MODAL: GASTO -->
-<div class="modal-overlay" id="expense-modal">
+<!-- MODAL GASTO -->
+<div class="modal-overlay" id="m-exp">
   <div class="modal">
-    <div class="modal-handle"></div>
+    <div class="handle"></div>
     <div class="modal-title">💸 Registrar Gasto</div>
-    <div class="form-group">
-      <label class="form-label">Tipo de gasto</label>
-      <select class="form-select" id="exp-type">
-        <option value="gasolina">⛽ Gasolina</option>
-        <option value="comida">🍽️ Comida</option>
-        <option value="mantenimiento">🔧 Mantenimiento</option>
-        <option value="gas">💨 Gas / Producto</option>
-        <option value="otro">📦 Otro</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Monto ($)</label>
-      <input class="form-input" id="exp-amount" type="number" inputmode="decimal" placeholder="0.00">
-    </div>
-    <div class="form-group">
-      <label class="form-label">Nota (opcional)</label>
-      <input class="form-input" id="exp-note" type="text" placeholder="Ej: Carga en Pemex Constitución">
-    </div>
-    <div class="btn-row">
-      <button class="btn btn-secondary" onclick="closeModal('expense-modal')">Cancelar</button>
-      <button class="btn btn-primary" onclick="saveExpense()">Guardar</button>
-    </div>
+    <div class="fg"><label class="flbl">Tipo de gasto</label><select class="fsel" id="etype"><option value="gasolina">⛽ Gasolina</option><option value="comida">🍽️ Comida</option><option value="mantenimiento">🔧 Mantenimiento</option><option value="gas">💨 Gas / Producto</option><option value="otro">📦 Otro</option></select></div>
+    <div class="fg"><label class="flbl">Monto ($)</label><input class="finput" id="eamt" type="number" inputmode="decimal" placeholder="0.00"></div>
+    <div class="fg"><label class="flbl">Nota (opcional)</label><input class="finput" id="enote" type="text" placeholder="Ej: Pemex Constitución"></div>
+    <div class="btn-row"><button class="btn btn-s" onclick="closeM('m-exp')">Cancelar</button><button class="btn btn-p" onclick="saveExp()">Guardar</button></div>
   </div>
 </div>
 
-<!-- MODAL: CLIENTE DETALLE -->
-<div class="modal-overlay" id="client-detail-modal">
+<!-- MODAL DETALLE -->
+<div class="modal-overlay" id="m-det">
   <div class="modal">
-    <div class="modal-handle"></div>
-    <div class="modal-title" id="cd-title">Cliente</div>
-    <div id="cd-content"></div>
-    <button class="btn btn-secondary mt-2" onclick="closeModal('client-detail-modal')">Cerrar</button>
+    <div class="handle"></div>
+    <div class="modal-title" id="det-title"></div>
+    <div id="det-body"></div>
+    <button class="btn btn-s mt-2" onclick="closeM('m-det')">Cerrar</button>
   </div>
 </div>
 
 <script>
-// ===== STATE =====
+/* ── STATE ── */
 const DB = {
-  sales: JSON.parse(localStorage.getItem('gr_sales') || '[]'),
-  clients: JSON.parse(localStorage.getItem('gr_clients') || '[]'),
-  expenses: JSON.parse(localStorage.getItem('gr_expenses') || '[]'),
+  sales:    JSON.parse(localStorage.getItem('gr_s') || '[]'),
+  clients:  JSON.parse(localStorage.getItem('gr_c') || '[]'),
+  expenses: JSON.parse(localStorage.getItem('gr_e') || '[]'),
 };
-let currentPos = null;
-let saleState = { step: 1, client: null, isNew: false, nearbyClients: [] };
-let histFilter = 'all';
-
-// ===== PERSIST =====
-function save() {
-  localStorage.setItem('gr_sales', JSON.stringify(DB.sales));
-  localStorage.setItem('gr_clients', JSON.stringify(DB.clients));
-  localStorage.setItem('gr_expenses', JSON.stringify(DB.expenses));
+function save(){
+  localStorage.setItem('gr_s', JSON.stringify(DB.sales));
+  localStorage.setItem('gr_c', JSON.stringify(DB.clients));
+  localStorage.setItem('gr_e', JSON.stringify(DB.expenses));
 }
 
-// ===== UTILS =====
-function fmt(n) { return '$' + Number(n).toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
-function fmtDate(d) { return new Date(d).toLocaleDateString('es-MX', { day: '2-digit', month: 'short' }); }
-function fmtTime(d) { return new Date(d).toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' }); }
-function today() { return new Date().toISOString().split('T')[0]; }
-function isToday(iso) { return iso.startsWith(today()); }
-function isThisWeek(iso) {
-  const d = new Date(iso), now = new Date();
-  const startW = new Date(now); startW.setDate(now.getDate() - now.getDay());
-  startW.setHours(0,0,0,0);
-  return d >= startW;
-}
-function isThisMonth(iso) {
-  const d = new Date(iso), now = new Date();
-  return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
-}
-function haversine(lat1, lon1, lat2, lon2) {
-  const R = 6371000, dLat = (lat2-lat1)*Math.PI/180, dLon = (lon2-lon1)*Math.PI/180;
-  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
-  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-}
-function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
-function typeIcon(t) {
-  const m = { gasolina: '⛽', comida: '🍽️', mantenimiento: '🔧', gas: '💨', otro: '📦' };
-  return m[t] || '📦';
-}
-function tankLabel(l) {
-  const m = { 10: '10 L', 20: '20 L', 30: '30 L', 45: '45 L', 60: '60 L', otro: 'Otro' };
-  return m[l] || l + ' L';
-}
-function toast(msg, emoji = '✅') {
-  const el = document.createElement('div');
-  el.className = 'toast';
-  el.innerHTML = `<span>${emoji}</span> ${msg}`;
-  document.body.appendChild(el);
-  setTimeout(() => el.remove(), 2600);
+let pos = null;
+let histF = 'all';
+let SS = {};  // sale state
+
+/* ── UTILS ── */
+const uid = () => Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+const fmt = n => '$'+Number(n).toLocaleString('es-MX',{minimumFractionDigits:2,maximumFractionDigits:2});
+const fmtD = d => new Date(d).toLocaleDateString('es-MX',{day:'2-digit',month:'short'});
+const fmtT = d => new Date(d).toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'});
+const todayStr = () => new Date().toISOString().split('T')[0];
+const isToday = iso => iso.startsWith(todayStr());
+const isWeek  = iso => { const d=new Date(iso),n=new Date(),s=new Date(n); s.setDate(n.getDate()-n.getDay()); s.setHours(0,0,0,0); return d>=s; };
+const isMon   = iso => { const d=new Date(iso),n=new Date(); return d.getMonth()===n.getMonth()&&d.getFullYear()===n.getFullYear(); };
+const expIco  = t => ({gasolina:'⛽',comida:'🍽️',mantenimiento:'🔧',gas:'💨',otro:'📦'}[t]||'📦');
+
+function hav(la1,lo1,la2,lo2){
+  const R=6371000,dLa=(la2-la1)*Math.PI/180,dLo=(lo2-lo1)*Math.PI/180;
+  const a=Math.sin(dLa/2)**2+Math.cos(la1*Math.PI/180)*Math.cos(la2*Math.PI/180)*Math.sin(dLo/2)**2;
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
 }
 
-// ===== HEADER DATE =====
-function updateHeaderDate() {
-  const el = document.getElementById('header-date');
-  const now = new Date();
-  el.innerHTML = now.toLocaleDateString('es-MX', { weekday: 'short', day: '2-digit', month: 'short' }) +
-    '<br>' + now.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' });
+function toast(msg,ico='✅'){
+  const t=document.createElement('div'); t.className='toast';
+  t.innerHTML=`<span>${ico}</span>${msg}`;
+  document.body.appendChild(t); setTimeout(()=>t.remove(),2800);
 }
-updateHeaderDate();
-setInterval(updateHeaderDate, 30000);
 
-// ===== NAV =====
-function showPage(page, btn) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('page-' + page).classList.add('active');
+/* ── CLOCK ── */
+function tick(){
+  const n=new Date();
+  document.getElementById('htime').textContent=n.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'});
+  document.getElementById('hdate').textContent=n.toLocaleDateString('es-MX',{weekday:'short',day:'2-digit',month:'short'});
+}
+tick(); setInterval(tick,30000);
+
+/* ── NAV ── */
+function goPage(page,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
   btn.classList.add('active');
-  document.getElementById('fab-btn').style.display = page === 'dashboard' ? 'flex' : 'none';
-  if (page === 'dashboard') renderDashboard();
-  if (page === 'clients') renderClientsList();
-  if (page === 'map') renderMap();
-  if (page === 'history') renderHistory();
-  if (page === 'expenses') renderExpenses();
+  document.getElementById('fab').style.display=page==='dashboard'?'flex':'none';
+  ({dashboard:renderDash, clients:renderClients, map:renderMap, history:renderHist, expenses:renderExp})[page]?.();
 }
 
-// ===== DASHBOARD =====
-function renderDashboard() {
-  const todaySales = DB.sales.filter(s => isToday(s.date));
-  const todayExp = DB.expenses.filter(e => isToday(e.date));
-  const income = todaySales.reduce((s, v) => s + Number(v.amount), 0);
-  const expense = todayExp.reduce((s, v) => s + Number(v.amount), 0);
-  const balance = income - expense;
-  const liters = todaySales.reduce((s, v) => s + Number(v.liters), 0);
-  const uniqueClients = [...new Set(todaySales.map(s => s.clientId))].length;
+/* ── DASHBOARD ── */
+function renderDash(){
+  const ts=DB.sales.filter(s=>isToday(s.date));
+  const te=DB.expenses.filter(e=>isToday(e.date));
+  const inc=ts.reduce((a,v)=>a+Number(v.amount),0);
+  const exp=te.reduce((a,v)=>a+Number(v.amount),0);
+  const bal=inc-exp;
+  const lit=ts.reduce((a,v)=>a+Number(v.liters),0);
+  const uc=[...new Set(ts.map(s=>s.clientId))].length;
+  document.getElementById('si').textContent=fmt(inc);
+  document.getElementById('si-s').textContent=ts.length+' venta'+(ts.length!==1?'s':'');
+  document.getElementById('se').textContent=fmt(exp);
+  document.getElementById('se-s').textContent=te.length+' gasto'+(te.length!==1?'s':'');
+  const be=document.getElementById('sb'); be.textContent=fmt(bal); be.className='stat-val '+(bal>=0?'v-bpos':'v-bneg');
+  document.getElementById('sl').textContent=lit.toFixed(1)+'L';
+  document.getElementById('sc').textContent=uc;
 
-  document.getElementById('stat-income').textContent = fmt(income);
-  document.getElementById('stat-income-sub').textContent = todaySales.length + ' venta' + (todaySales.length !== 1 ? 's' : '');
-  document.getElementById('stat-expense').textContent = fmt(expense);
-  document.getElementById('stat-expense-sub').textContent = todayExp.length + ' gasto' + (todayExp.length !== 1 ? 's' : '');
-  const bel = document.getElementById('stat-balance');
-  bel.textContent = fmt(balance);
-  bel.className = 'stat-val ' + (balance >= 0 ? 'balance-pos' : 'balance-neg');
-  document.getElementById('stat-liters').textContent = liters.toFixed(1) + ' L';
-  document.getElementById('stat-clients').textContent = uniqueClients;
-
-  const list = document.getElementById('sales-list');
-  if (todaySales.length === 0) {
-    list.innerHTML = '<div class="empty"><div class="empty-icon">📋</div><div class="empty-txt">Aún no hay ventas hoy<br>Presiona ＋ para registrar una</div></div>';
+  const list=document.getElementById('sales-list');
+  const card=document.getElementById('sales-card');
+  if(ts.length===0){
+    card.style.display='none';
+    let e=document.getElementById('dash-empty');
+    if(!e){e=document.createElement('div');e.id='dash-empty';e.className='empty';document.getElementById('page-dashboard').appendChild(e);}
+    e.innerHTML='<div class="empty-icon">📋</div><div class="empty-h">Sin ventas hoy</div><div class="empty-t">Toca ＋ para registrar tu primera venta del día</div>';
     return;
   }
-  list.innerHTML = [...todaySales].reverse().map(s => {
-    const c = DB.clients.find(cl => cl.id === s.clientId);
-    return `<div class="sale-item" onclick="showSaleDetail('${s.id}')">
-      <div class="sale-dot">⛽</div>
-      <div class="sale-info">
-        <div class="sale-ref">${c ? c.ref : 'Cliente'}</div>
-        <div class="sale-meta">${fmtTime(s.date)} · ${s.liters} L · ${s.tank}</div>
-      </div>
-      <div class="sale-amount">
-        <div class="sale-mxn">${fmt(s.amount)}</div>
-        <div class="sale-liters">${s.liters} litros</div>
-      </div>
+  const de=document.getElementById('dash-empty'); if(de) de.remove();
+  card.style.display='';
+  list.innerHTML=[...ts].reverse().map(s=>{
+    const c=DB.clients.find(cl=>cl.id===s.clientId);
+    return `<div class="list-item" onclick="detSale('${s.id}')">
+      <div class="item-icon">⛽</div>
+      <div class="item-info"><div class="item-title">${c?c.ref:'Cliente'}</div><div class="item-sub">${fmtT(s.date)} · ${s.liters}L · Tanque ${s.tank}L</div></div>
+      <div class="item-right"><div class="item-mxn">${fmt(s.amount)}</div><div class="item-lit">${s.liters} L</div></div>
+      <span class="chevron">›</span>
     </div>`;
   }).join('');
 }
 
-// ===== CLIENTS LIST =====
-function renderClientsList() {
-  const q = (document.getElementById('search-clients')?.value || '').toLowerCase();
-  const list = document.getElementById('clients-list');
-  let clients = DB.clients;
-  if (q) clients = clients.filter(c => c.ref.toLowerCase().includes(q));
-  if (clients.length === 0) {
-    list.innerHTML = '<div class="empty"><div class="empty-icon">👥</div><div class="empty-txt">No hay clientes registrados</div></div>';
+/* ── CLIENTS ── */
+function renderClients(){
+  const q=(document.getElementById('srch')?.value||'').toLowerCase();
+  let cl=DB.clients; if(q) cl=cl.filter(c=>c.ref.toLowerCase().includes(q));
+  const wrap=document.getElementById('clients-wrap');
+  if(cl.length===0){
+    wrap.innerHTML='<div class="empty"><div class="empty-icon">👥</div><div class="empty-h">Sin clientes</div><div class="empty-t">Los clientes se crean automáticamente al registrar ventas</div></div>';
     return;
   }
-  list.innerHTML = clients.map(c => {
-    const sales = DB.sales.filter(s => s.clientId === c.id);
-    const total = sales.reduce((s, v) => s + Number(v.amount), 0);
-    return `<div class="client-option" onclick="showClientDetail('${c.id}')">
-      <div class="client-icon">📍</div>
-      <div style="flex:1;min-width:0">
-        <div class="client-ref">${c.ref}</div>
-        <div class="client-coords">${c.lat.toFixed(5)}, ${c.lon.toFixed(5)}</div>
-      </div>
-      <div style="text-align:right;flex-shrink:0">
-        <div style="font-size:0.8rem;color:var(--accent);font-weight:600">${fmt(total)}</div>
-        <div style="font-size:0.62rem;color:var(--text3)">${sales.length} visita${sales.length !== 1 ? 's' : ''}</div>
-      </div>
+  if(!document.getElementById('clients-list')) wrap.innerHTML='<div class="card" id="clients-list"></div>';
+  document.getElementById('clients-list').innerHTML=cl.map(c=>{
+    const sl=DB.sales.filter(s=>s.clientId===c.id);
+    const tot=sl.reduce((a,v)=>a+Number(v.amount),0);
+    return `<div class="list-item" onclick="detClient('${c.id}')">
+      <div class="item-icon" style="background:var(--blue-lt)">📍</div>
+      <div class="item-info"><div class="item-title">${c.ref}</div><div class="item-sub">${sl.length} visita${sl.length!==1?'s':''} · ${c.lat.toFixed(4)}, ${c.lon.toFixed(4)}</div></div>
+      <div class="item-right"><div class="item-mxn" style="color:var(--blue)">${fmt(tot)}</div><div class="item-lit">${sl.length} vis.</div></div>
+      <span class="chevron">›</span>
     </div>`;
   }).join('');
 }
 
-// ===== HISTORY =====
-function setHistFilter(f, btn) {
-  histFilter = f;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderHistory();
-}
-function renderHistory() {
-  let sales = [...DB.sales].reverse();
-  if (histFilter === 'today') sales = sales.filter(s => isToday(s.date));
-  else if (histFilter === 'week') sales = sales.filter(s => isThisWeek(s.date));
-  else if (histFilter === 'month') sales = sales.filter(s => isThisMonth(s.date));
-  const list = document.getElementById('history-list');
-  if (sales.length === 0) {
-    list.innerHTML = '<div class="empty"><div class="empty-icon">📋</div><div class="empty-txt">Sin ventas en este período</div></div>';
-    return;
-  }
-  list.innerHTML = sales.map(s => {
-    const c = DB.clients.find(cl => cl.id === s.clientId);
-    return `<div class="sale-item" onclick="showSaleDetail('${s.id}')">
-      <div class="sale-dot">⛽</div>
-      <div class="sale-info">
-        <div class="sale-ref">${c ? c.ref : 'Cliente'}</div>
-        <div class="sale-meta">${fmtDate(s.date)} ${fmtTime(s.date)} · ${s.liters} L</div>
-      </div>
-      <div class="sale-amount">
-        <div class="sale-mxn">${fmt(s.amount)}</div>
-        <div class="sale-liters">${s.liters} L</div>
-      </div>
+/* ── HISTORY ── */
+function setF(f,btn){ histF=f; document.querySelectorAll('.chip').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); renderHist(); }
+function renderHist(){
+  let ss=[...DB.sales].reverse();
+  if(histF==='today') ss=ss.filter(s=>isToday(s.date));
+  else if(histF==='week') ss=ss.filter(s=>isWeek(s.date));
+  else if(histF==='month') ss=ss.filter(s=>isMon(s.date));
+  const el=document.getElementById('hist-list');
+  if(ss.length===0){ el.innerHTML='<div class="empty"><div class="empty-icon">📋</div><div class="empty-h">Sin ventas</div><div class="empty-t">No hay ventas en este período</div></div>'; return; }
+  el.innerHTML=ss.map(s=>{
+    const c=DB.clients.find(cl=>cl.id===s.clientId);
+    return `<div class="list-item" onclick="detSale('${s.id}')">
+      <div class="item-icon">⛽</div>
+      <div class="item-info"><div class="item-title">${c?c.ref:'Cliente'}</div><div class="item-sub">${fmtD(s.date)} ${fmtT(s.date)} · ${s.liters}L</div></div>
+      <div class="item-right"><div class="item-mxn">${fmt(s.amount)}</div><div class="item-lit">${s.liters} L</div></div>
+      <span class="chevron">›</span>
     </div>`;
   }).join('');
 }
 
-// ===== EXPENSES =====
-function renderExpenses() {
-  const monthExp = DB.expenses.filter(e => isThisMonth(e.date));
-  const total = monthExp.reduce((s, v) => s + Number(v.amount), 0);
-  document.getElementById('monthly-expense').textContent = fmt(total);
-  const list = document.getElementById('expenses-list');
-  const allExp = [...DB.expenses].reverse();
-  if (allExp.length === 0) {
-    list.innerHTML = '<div class="empty"><div class="empty-icon">💸</div><div class="empty-txt">Sin gastos registrados</div></div>';
-    return;
-  }
-  list.innerHTML = allExp.map(e => `
-    <div class="expense-item">
-      <div class="exp-icon">${typeIcon(e.type)}</div>
-      <div class="exp-info">
-        <div class="exp-type">${e.type.charAt(0).toUpperCase() + e.type.slice(1)}${e.note ? ' — ' + e.note : ''}</div>
-        <div class="exp-date">${fmtDate(e.date)} ${fmtTime(e.date)}</div>
-      </div>
-      <div class="exp-amount">${fmt(e.amount)}</div>
+/* ── EXPENSES ── */
+function renderExp(){
+  const me=DB.expenses.filter(e=>isMon(e.date)).reduce((a,v)=>a+Number(v.amount),0);
+  const te=DB.expenses.filter(e=>isToday(e.date)).reduce((a,v)=>a+Number(v.amount),0);
+  document.getElementById('em').textContent=fmt(me);
+  document.getElementById('et').textContent=fmt(te);
+  const el=document.getElementById('exp-list');
+  const all=[...DB.expenses].reverse();
+  if(all.length===0){ el.innerHTML='<div class="empty"><div class="empty-icon">💸</div><div class="empty-h">Sin gastos</div><div class="empty-t">Registra tus gastos del día</div></div>'; return; }
+  el.innerHTML=all.map(e=>`
+    <div class="exp-item">
+      <div class="exp-icon">${expIco(e.type)}</div>
+      <div style="flex:1"><div class="exp-lbl">${e.type.charAt(0).toUpperCase()+e.type.slice(1)}</div><div class="exp-note">${e.note||fmtD(e.date)+' '+fmtT(e.date)}</div></div>
+      <div class="exp-amt">${fmt(e.amount)}</div>
     </div>`).join('');
 }
 
-// ===== MAP =====
-function renderMap() {
-  const canvas = document.getElementById('map-canvas');
-  const ctx = canvas.getContext('2d');
-  const W = canvas.parentElement.clientWidth;
-  const H = 320;
-  canvas.width = W; canvas.height = H;
-
-  // Background
-  ctx.fillStyle = '#0d0d1a';
-  ctx.fillRect(0, 0, W, H);
-
-  // Grid
-  ctx.strokeStyle = '#1c1c38'; ctx.lineWidth = 1;
-  for (let x = 0; x < W; x += 40) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
-  for (let y = 0; y < H; y += 40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
-
-  const clients = DB.clients;
-  if (clients.length === 0) {
-    ctx.fillStyle = '#5a5a8a'; ctx.font = '14px IBM Plex Mono';
-    ctx.textAlign = 'center'; ctx.fillText('Sin clientes registrados', W/2, H/2);
-    return;
-  }
-
-  // Compute bounds
-  const lats = clients.map(c => c.lat), lons = clients.map(c => c.lon);
-  let minLat = Math.min(...lats) - 0.001, maxLat = Math.max(...lats) + 0.001;
-  let minLon = Math.min(...lons) - 0.001, maxLon = Math.max(...lons) + 0.001;
-  if (currentPos) {
-    minLat = Math.min(minLat, currentPos.lat - 0.001); maxLat = Math.max(maxLat, currentPos.lat + 0.001);
-    minLon = Math.min(minLon, currentPos.lon - 0.001); maxLon = Math.max(maxLon, currentPos.lon + 0.001);
-  }
-  const pad = 30;
-  function toX(lon) { return pad + (lon - minLon) / (maxLon - minLon) * (W - 2*pad); }
-  function toY(lat) { return H - pad - (lat - minLat) / (maxLat - minLat) * (H - 2*pad); }
-
-  // Draw connections (route lines)
-  if (clients.length > 1) {
-    ctx.strokeStyle = 'rgba(99,102,241,0.2)'; ctx.lineWidth = 1.5; ctx.setLineDash([4, 4]);
-    ctx.beginPath(); ctx.moveTo(toX(clients[0].lon), toY(clients[0].lat));
-    clients.forEach(c => ctx.lineTo(toX(c.lon), toY(c.lat)));
-    ctx.stroke(); ctx.setLineDash([]);
-  }
-
-  // Draw clients
-  clients.forEach(c => {
-    const x = toX(c.lon), y = toY(c.lat);
-    const sales = DB.sales.filter(s => s.clientId === c.id).length;
-    const r = Math.min(10, 5 + sales * 1.5);
-    ctx.beginPath(); ctx.arc(x, y, r + 3, 0, Math.PI*2);
-    ctx.fillStyle = 'rgba(249,115,22,0.15)'; ctx.fill();
-    ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI*2);
-    ctx.fillStyle = '#f97316'; ctx.fill();
-    ctx.fillStyle = '#fff'; ctx.font = 'bold 9px IBM Plex Mono';
-    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.fillText(sales > 0 ? sales : '·', x, y);
+/* ── MAP ── */
+function renderMap(){
+  const cv=document.getElementById('map-cv'), ctx=cv.getContext('2d');
+  const W=cv.parentElement.clientWidth, H=300;
+  cv.width=W; cv.height=H;
+  ctx.fillStyle='#eef2fb'; ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle='#e2e8f5'; ctx.lineWidth=1;
+  for(let x=0;x<W;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+  for(let y=0;y<H;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+  const cl=DB.clients;
+  if(cl.length===0){ ctx.fillStyle='#8e8e93'; ctx.font='600 13px Plus Jakarta Sans,sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText('Sin clientes registrados',W/2,H/2); renderZones(); renderRoute(); return; }
+  let lats=cl.map(c=>c.lat),lons=cl.map(c=>c.lon);
+  let mLa=Math.min(...lats)-.001,xLa=Math.max(...lats)+.001,mLo=Math.min(...lons)-.001,xLo=Math.max(...lons)+.001;
+  if(pos){mLa=Math.min(mLa,pos.lat-.001);xLa=Math.max(xLa,pos.lat+.001);mLo=Math.min(mLo,pos.lon-.001);xLo=Math.max(xLo,pos.lon+.001);}
+  const P=36,tx=lo=>P+(lo-mLo)/(xLo-mLo)*(W-2*P),ty=la=>H-P-(la-mLa)/(xLa-mLa)*(H-2*P);
+  if(cl.length>1){ctx.strokeStyle='rgba(0,122,255,.15)';ctx.lineWidth=2;ctx.setLineDash([5,5]);ctx.beginPath();ctx.moveTo(tx(cl[0].lon),ty(cl[0].lat));cl.forEach(c=>ctx.lineTo(tx(c.lon),ty(c.lat)));ctx.stroke();ctx.setLineDash([]);}
+  cl.forEach(c=>{
+    const x=tx(c.lon),y=ty(c.lat),s=DB.sales.filter(v=>v.clientId===c.id).length,r=Math.min(12,6+s*1.5);
+    ctx.beginPath();ctx.arc(x,y,r+4,0,Math.PI*2);ctx.fillStyle='rgba(255,107,0,.12)';ctx.fill();
+    ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fillStyle='#ff6b00';ctx.fill();
+    ctx.fillStyle='#fff';ctx.font='bold 9px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(s>0?s:'·',x,y);
   });
-
-  // Current position
-  if (currentPos) {
-    const x = toX(currentPos.lon), y = toY(currentPos.lat);
-    ctx.beginPath(); ctx.arc(x, y, 10, 0, Math.PI*2);
-    ctx.fillStyle = 'rgba(99,102,241,0.3)'; ctx.fill();
-    ctx.beginPath(); ctx.arc(x, y, 6, 0, Math.PI*2);
-    ctx.fillStyle = '#6366f1'; ctx.fill();
-    ctx.beginPath(); ctx.arc(x, y, 3, 0, Math.PI*2);
-    ctx.fillStyle = '#fff'; ctx.fill();
-  }
-
-  // Zone analysis
-  renderZones();
-  renderRoutes();
+  if(pos){const x=tx(pos.lon),y=ty(pos.lat);ctx.beginPath();ctx.arc(x,y,12,0,Math.PI*2);ctx.fillStyle='rgba(0,122,255,.15)';ctx.fill();ctx.beginPath();ctx.arc(x,y,7,0,Math.PI*2);ctx.fillStyle='#007aff';ctx.fill();ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();}
+  renderZones(); renderRoute();
+}
+function renderZones(){
+  const el=document.getElementById('zones');
+  if(!DB.clients.length){el.innerHTML='<span class="t-mut t-sm">Sin datos suficientes</span>';return;}
+  const z={};
+  DB.clients.forEach(c=>{const k=(Math.round(c.lat*100)/100)+','+(Math.round(c.lon*100)/100);z[k]=(z[k]||0)+DB.sales.filter(s=>s.clientId===c.id).length;});
+  const top=Object.entries(z).sort((a,b)=>b[1]-a[1]).slice(0,3);
+  if(!top.length){el.innerHTML='<span class="t-mut t-sm">Registra ventas para ver zonas</span>';return;}
+  el.innerHTML=top.map(([,v],i)=>`<div class="hrow"><span class="hlbl">Zona ${i+1}</span><span class="hval t-acc">${v} venta${v!==1?'s':''}</span></div>`).join('');
+}
+function renderRoute(){
+  const el=document.getElementById('route');
+  if(DB.clients.length<2){el.innerHTML='<span class="t-mut t-sm">Registra al menos 2 clientes para sugerir ruta</span>';return;}
+  const ws=DB.clients.map(c=>({...c,s:DB.sales.filter(v=>v.clientId===c.id).length})).filter(c=>c.s>0).sort((a,b)=>b.s-a.s);
+  if(ws.length<2){el.innerHTML='<span class="t-mut t-sm">Registra ventas en 2 o más clientes</span>';return;}
+  el.innerHTML=ws.slice(0,5).map((c,i)=>`<div class="hrow"><div style="display:flex;align-items:center;gap:8px"><span style="width:22px;height:22px;border-radius:50%;background:var(--accent);color:#fff;font-size:.68rem;font-weight:800;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0">${i+1}</span><span style="font-size:.85rem;font-weight:600">${c.ref}</span></div><span class="hlbl" style="font-size:.7rem">${c.s} visitas</span></div>`).join('');
 }
 
-function renderZones() {
-  const el = document.getElementById('zones-list');
-  if (DB.clients.length === 0) { el.textContent = 'Sin datos suficientes.'; return; }
-  const byZone = {};
-  DB.clients.forEach(c => {
-    const key = Math.round(c.lat * 100) / 100 + ',' + Math.round(c.lon * 100) / 100;
-    byZone[key] = (byZone[key] || 0) + DB.sales.filter(s => s.clientId === c.id).length;
-  });
-  const top = Object.entries(byZone).sort((a, b) => b[1] - a[1]).slice(0, 3);
-  el.innerHTML = top.map(([k, v], i) => `<div style="padding:5px 0;border-bottom:1px solid var(--border);font-size:0.78rem;display:flex;justify-content:space-between">
-    <span style="color:var(--text)">Zona ${i+1}</span>
-    <span style="color:var(--accent)">${v} venta${v !== 1 ? 's' : ''}</span>
-  </div>`).join('') || '<span>Sin datos suficientes.</span>';
-}
+/* ── SALE MODAL ── */
+function openSale(){ SS={step:1,client:null,isNew:false,nearby:[]}; document.getElementById('m-sale').classList.add('open'); step1(); }
+function closeM(id){ document.getElementById(id).classList.remove('open'); }
 
-function renderRoutes() {
-  const el = document.getElementById('route-suggestion');
-  if (DB.clients.length < 2) { el.textContent = 'Registra al menos 2 clientes para sugerir ruta.'; return; }
-  const withSales = DB.clients
-    .map(c => ({ ...c, sales: DB.sales.filter(s => s.clientId === c.id).length }))
-    .filter(c => c.sales > 0)
-    .sort((a, b) => b.sales - a.sales);
-  if (withSales.length < 2) { el.textContent = 'Registra ventas en al menos 2 clientes.'; return; }
-  el.innerHTML = withSales.slice(0, 5).map((c, i) =>
-    `<div style="font-size:0.78rem;padding:4px 0;display:flex;align-items:center;gap:8px">
-      <span style="color:var(--accent);font-weight:600">${i+1}.</span>
-      <span>${c.ref}</span>
-      <span style="margin-left:auto;color:var(--text3)">${c.sales} visitas</span>
-    </div>`
-  ).join('');
-}
+function dots(n){ for(let i=1;i<=3;i++){const d=document.getElementById('d'+i);d.className='sdot'+(i<n?' done':i===n?' active':'');} }
 
-// ===== SALE MODAL =====
-function openSaleModal() {
-  saleState = { step: 1, client: null, isNew: false, nearbyClients: [] };
-  document.getElementById('sale-modal').classList.add('open');
-  renderSaleStep1();
-}
-function closeSaleModal() {
-  document.getElementById('sale-modal').classList.remove('open');
-}
-function closeModal(id) {
-  document.getElementById(id).classList.remove('open');
-}
-
-function updateSteps(current) {
-  for (let i = 1; i <= 3; i++) {
-    const dot = document.getElementById('sdot-' + i);
-    if (i < current) dot.className = 'step-dot done';
-    else if (i === current) dot.className = 'step-dot active';
-    else dot.className = 'step-dot';
-  }
-}
-
-// STEP 1: GPS + cliente
-function renderSaleStep1() {
-  updateSteps(1);
-  const c = document.getElementById('sale-step-content');
-  c.innerHTML = `
+/* STEP 1 — GPS + cliente */
+function step1(){
+  dots(1);
+  document.getElementById('sale-body').innerHTML=`
     <div class="modal-step">Paso 1 de 3</div>
     <div class="modal-title">📍 Ubicar cliente</div>
-    <div class="gps-badge" id="gps-badge">
-      <div class="gps-dot searching" id="gps-dot"></div>
-      <span id="gps-txt">Obteniendo ubicación GPS...</span>
-    </div>
-    <div id="nearby-section"></div>
-    <div style="margin-top:10px">
-      <button class="btn btn-secondary" onclick="closeSaleModal()">Cancelar</button>
-    </div>`;
+    <div class="gps-badge"><div class="gps-dot srch" id="gdot"></div><span class="gps-txt" id="gtxt">Obteniendo GPS…</span></div>
+    <div id="nbarea"></div>
+    <button class="btn btn-s mt-2" onclick="closeM('m-sale')">Cancelar</button>`;
   getGPS();
 }
 
-function getGPS() {
-  if (!navigator.geolocation) {
-    setGPSError('GPS no disponible en este dispositivo');
-    return;
-  }
+function getGPS(){
+  if(!navigator.geolocation){ gpsErr('GPS no disponible en este dispositivo'); return; }
   navigator.geolocation.getCurrentPosition(
-    pos => {
-      currentPos = { lat: pos.coords.latitude, lon: pos.coords.longitude };
-      onGPSSuccess();
-    },
-    err => setGPSError('No se pudo obtener GPS: ' + (err.code === 1 ? 'Permiso denegado' : 'Error de señal')),
-    { enableHighAccuracy: true, timeout: 10000 }
+    p=>{ pos={lat:p.coords.latitude,lon:p.coords.longitude}; gpsOk(); },
+    e=>gpsErr('Sin GPS ('+(e.code===1?'Permiso denegado':'Sin señal')+')'),
+    {enableHighAccuracy:true,timeout:12000}
   );
 }
 
-function setGPSError(msg) {
-  const dot = document.getElementById('gps-dot');
-  const txt = document.getElementById('gps-txt');
-  if (!dot) return;
-  dot.className = 'gps-dot error';
-  txt.textContent = msg;
-  // Allow manual continue
-  const nearby = document.getElementById('nearby-section');
-  if (nearby) nearby.innerHTML = `
-    <div class="card card-sm" style="margin-top:8px">
-      <div style="font-size:0.8rem;color:var(--text2);margin-bottom:10px">⚠️ Puedes continuar sin GPS, el cliente se registrará sin coordenadas exactas.</div>
-      <button class="btn btn-primary" onclick="skipGPS()">Continuar sin GPS</button>
-    </div>`;
+function gpsErr(msg){
+  const d=document.getElementById('gdot'),t=document.getElementById('gtxt');
+  if(!d) return;
+  d.className='gps-dot err'; t.textContent=msg;
+  document.getElementById('nbarea').innerHTML=`
+    <div class="alert alert-orange"><span class="alert-icon">⚠️</span><span class="alert-txt">Sin GPS. Puedes continuar; el cliente quedará sin coordenadas exactas.</span></div>
+    <button class="btn btn-p" onclick="noGPS()">Continuar sin GPS</button>`;
 }
+function noGPS(){ pos={lat:0,lon:0}; gpsOk(true); }
 
-function skipGPS() {
-  currentPos = { lat: 0, lon: 0 };
-  onGPSSuccess(true);
-}
+function gpsOk(noGps=false){
+  const d=document.getElementById('gdot'),t=document.getElementById('gtxt');
+  if(d) d.className='gps-dot ok';
+  if(t) t.textContent=noGps?'Sin GPS — sin coordenadas exactas':`${pos.lat.toFixed(5)}, ${pos.lon.toFixed(5)}`;
 
-function onGPSSuccess(noGPS = false) {
-  const dot = document.getElementById('gps-dot');
-  const txt = document.getElementById('gps-txt');
-  if (dot) { dot.className = 'gps-dot found'; }
-  if (txt) txt.textContent = noGPS ? 'Sin GPS — coordenadas manuales' : `${currentPos.lat.toFixed(5)}, ${currentPos.lon.toFixed(5)}`;
+  SS.nearby=DB.clients
+    .map(c=>({...c,dist:hav(pos.lat,pos.lon,c.lat,c.lon)}))
+    .filter(c=>c.dist<=50)
+    .sort((a,b)=>a.dist-b.dist);
 
-  // Find nearby
-  const threshold = 30; // meters
-  saleState.nearbyClients = DB.clients
-    .map(c => ({ ...c, dist: haversine(currentPos.lat, currentPos.lon, c.lat, c.lon) }))
-    .filter(c => c.dist <= threshold)
-    .sort((a, b) => a.dist - b.dist);
+  const area=document.getElementById('nbarea');
+  if(!area) return;
 
-  const nearby = document.getElementById('nearby-section');
-  if (!nearby) return;
-  if (saleState.nearbyClients.length > 0) {
-    nearby.innerHTML = `
-      <div class="sec-title" style="margin-top:12px">Clientes cercanos</div>
-      ${saleState.nearbyClients.map(c => `
-        <div class="client-option" id="co-${c.id}" onclick="selectClient('${c.id}')">
-          <div class="client-icon">📍</div>
-          <div style="flex:1;min-width:0">
-            <div class="client-ref">${c.ref}</div>
-            <div class="client-coords">${c.lat.toFixed(5)}, ${c.lon.toFixed(5)}</div>
-          </div>
-          <div class="client-dist">~${Math.round(c.dist)}m</div>
+  if(SS.nearby.length>0){
+    area.innerHTML=`
+      <div class="sec-title" style="margin-top:0;margin-bottom:8px">Clientes cercanos (50 m)</div>
+      ${SS.nearby.map(c=>`
+        <div class="copt" id="co-${c.id}" onclick="selClient('${c.id}')">
+          <span style="font-size:1.25rem">📍</span>
+          <div style="flex:1;min-width:0"><div class="cref">${c.ref}</div><div class="ccoord">${c.lat.toFixed(5)}, ${c.lon.toFixed(5)}</div></div>
+          <span class="cdist">~${Math.round(c.dist)}m</span>
         </div>`).join('')}
-      <div class="sec-title" style="margin-top:10px">O registrar nuevo</div>
-      <button class="btn btn-secondary" onclick="showNewClientForm()">➕ Nuevo cliente aquí</button>`;
+      <div class="div" style="margin:14px 0"></div>
+      <p class="t-mut t-sm mb-1">¿No es ninguno de estos? Registra uno nuevo aquí.</p>
+      <button class="btn btn-s" id="new-btn" onclick="showNewForm()">➕ Nuevo cliente en esta ubicación</button>
+      <div id="inline-form"></div>`;
   } else {
-    nearby.innerHTML = `
-      <div class="card card-sm" style="background:rgba(99,102,241,0.08);border-color:var(--blue);margin-top:8px">
-        <div style="font-size:0.78rem;color:var(--text2)">✨ No hay clientes en ${threshold}m. Registra uno nuevo.</div>
-      </div>
-      <div id="new-client-form-area" style="margin-top:10px"></div>`;
-    showNewClientForm();
+    area.innerHTML=`
+      <div class="alert alert-blue"><span class="alert-icon">ℹ️</span><span class="alert-txt">No hay clientes registrados en 50 m. Registra uno nuevo.</span></div>
+      <div id="inline-form"></div>`;
+    buildForm('inline-form');
   }
 }
 
-function showNewClientForm() {
-  const area = document.getElementById('new-client-form-area') || document.getElementById('nearby-section');
-  if (!area) return;
-  const extraHtml = saleState.nearbyClients.length > 0
-    ? `<div class="form-hint" style="margin-bottom:12px;color:var(--blue)">📍 Se usará la ubicación GPS actual</div>` : '';
-  area.innerHTML = `
-    ${extraHtml}
-    <div class="form-group">
-      <label class="form-label">Referencia del lugar</label>
-      <input class="form-input" id="new-ref" type="text" placeholder="Ej: Casa azul con portón negro" maxlength="80" autofocus>
-      <div class="form-hint">Descripción para identificar el lugar</div>
+function showNewForm(){
+  const btn=document.getElementById('new-btn'); if(btn) btn.style.display='none';
+  buildForm('inline-form');
+}
+
+function buildForm(cid){
+  document.getElementById(cid).innerHTML=`
+    <div class="fg mt-2">
+      <label class="flbl">Referencia del lugar</label>
+      <input class="finput" id="nref" type="text" placeholder="Ej: Casa azul, portón negro" maxlength="80" autocomplete="off">
+      <div class="fhint">Descripción para identificarlo en la ruta</div>
     </div>
-    <button class="btn btn-primary" onclick="confirmNewClient()">✅ Usar esta ubicación</button>`;
+    <button class="btn btn-p" onclick="saveNewClient()">✅ Registrar y continuar</button>`;
+  setTimeout(()=>document.getElementById('nref')?.focus(),200);
 }
 
-function selectClient(id) {
-  document.querySelectorAll('.client-option').forEach(el => el.classList.remove('selected'));
-  const el = document.getElementById('co-' + id);
-  if (el) el.classList.add('selected');
-  saleState.client = DB.clients.find(c => c.id === id);
-  saleState.isNew = false;
-  setTimeout(() => renderSaleStep2(), 400);
+function selClient(id){
+  document.querySelectorAll('.copt').forEach(e=>e.classList.remove('sel'));
+  document.getElementById('co-'+id)?.classList.add('sel');
+  SS.client=DB.clients.find(c=>c.id===id); SS.isNew=false;
+  setTimeout(()=>step2(),380);
 }
 
-function confirmNewClient() {
-  const ref = document.getElementById('new-ref')?.value?.trim();
-  if (!ref) { toast('Escribe una referencia del lugar', '⚠️'); return; }
-  // Check duplicate
-  const dup = DB.clients.find(c => haversine(currentPos.lat, currentPos.lon, c.lat, c.lon) < 15);
-  if (dup) {
-    toast('Ya existe un cliente a menos de 15m: ' + dup.ref, '⚠️'); return;
-  }
-  const newClient = { id: uid(), lat: currentPos.lat, lon: currentPos.lon, ref, createdAt: new Date().toISOString() };
-  DB.clients.push(newClient);
-  save();
-  saleState.client = newClient;
-  saleState.isNew = true;
-  toast('Cliente registrado', '📍');
-  renderSaleStep2();
+/*
+  ╔══════════════════════════════════════════════════════╗
+  ║  BUG FIX — YA NO SE BLOQUEA SI HAY CLIENTE < 15 m  ║
+  ║  Antes: si había un cliente a menos de 15m, se       ║
+  ║  bloqueaba el registro y el usuario no podía         ║
+  ║  guardar clientes de casas contiguas.                ║
+  ║                                                      ║
+  ║  Ahora: se permite SIEMPRE registrar cliente nuevo.  ║
+  ║  Si hay uno muy cerca (≤ 8m) solo se muestra un      ║
+  ║  aviso informativo tipo toast, pero NO bloquea.      ║
+  ╚══════════════════════════════════════════════════════╝
+*/
+function saveNewClient(){
+  const ref=document.getElementById('nref')?.value?.trim();
+  if(!ref){ toast('Escribe una referencia del lugar','⚠️'); return; }
+
+  // Aviso informativo si hay cliente a ≤8m, pero NO bloquea el registro
+  const veryClose=DB.clients.find(c=>hav(pos.lat,pos.lon,c.lat,c.lon)<8);
+  if(veryClose) toast(`Aviso: "${veryClose.ref}" está muy cerca`,'ℹ️');
+
+  const nc={id:uid(),lat:pos.lat,lon:pos.lon,ref,createdAt:new Date().toISOString()};
+  DB.clients.push(nc); save();
+  SS.client=nc; SS.isNew=true;
+  toast('Cliente registrado','📍');
+  step2();
 }
 
-// STEP 2: Datos de venta
-function renderSaleStep2() {
-  updateSteps(2);
-  const c = document.getElementById('sale-step-content');
-  const cl = saleState.client;
-  c.innerHTML = `
+/* STEP 2 */
+function step2(){
+  dots(2);
+  const cl=SS.client;
+  document.getElementById('sale-body').innerHTML=`
     <div class="modal-step">Paso 2 de 3</div>
     <div class="modal-title">⛽ Datos de venta</div>
-    <div class="card card-sm mb-2" style="background:rgba(249,115,22,0.08);border-color:rgba(249,115,22,0.3)">
-      <div style="font-size:0.7rem;color:var(--text3)">Cliente</div>
-      <div style="font-weight:600">${cl ? cl.ref : 'Desconocido'}</div>
-      ${saleState.isNew ? '<span class="tag tag-new" style="margin-top:4px;display:inline-flex">✨ Nuevo</span>' : ''}
+    <div class="alert alert-orange" style="margin-bottom:16px">
+      <span class="alert-icon">📍</span>
+      <div><div style="font-size:.85rem;font-weight:700;color:var(--text)">${cl.ref}</div>${SS.isNew?'<span style="display:inline-flex;align-items:center;gap:3px;padding:3px 8px;border-radius:6px;background:var(--blue-lt);color:var(--blue);font-size:.65rem;font-weight:700;margin-top:5px">✨ Nuevo cliente</span>':''}</div>
     </div>
-    <div class="form-group">
-      <label class="form-label">Tipo de tanque</label>
-      <select class="form-select" id="sale-tank">
-        <option value="10">10 litros</option>
-        <option value="20" selected>20 litros</option>
-        <option value="30">30 litros</option>
-        <option value="45">45 litros</option>
-        <option value="60">60 litros</option>
-        <option value="otro">Otro</option>
-      </select>
+    <div class="fg"><label class="flbl">Tipo de tanque</label><select class="fsel" id="stank"><option value="10">10 litros</option><option value="20" selected>20 litros</option><option value="30">30 litros</option><option value="45">45 litros</option><option value="60">60 litros</option></select></div>
+    <div class="frow">
+      <div class="fg"><label class="flbl">Litros surtidos</label><input class="finput" id="slit" type="number" inputmode="decimal" placeholder="0.0" step="0.5" min="0"></div>
+      <div class="fg"><label class="flbl">Monto cobrado</label><input class="finput" id="samt" type="number" inputmode="decimal" placeholder="$0" step="1" min="0"></div>
     </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">Litros surtidos</label>
-        <input class="form-input" id="sale-liters" type="number" inputmode="decimal" placeholder="0.0" step="0.5" min="0">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Monto cobrado $</label>
-        <input class="form-input" id="sale-amount" type="number" inputmode="decimal" placeholder="0.00" step="1" min="0">
-      </div>
-    </div>
-    <div class="btn-row">
-      <button class="btn btn-secondary" onclick="renderSaleStep1()">← Atrás</button>
-      <button class="btn btn-primary" onclick="goToStep3()">Continuar →</button>
-    </div>`;
+    <div class="btn-row"><button class="btn btn-s" onclick="step1()">← Atrás</button><button class="btn btn-p" onclick="goStep3()">Continuar →</button></div>`;
 }
 
-function goToStep3() {
-  const liters = parseFloat(document.getElementById('sale-liters').value);
-  const amount = parseFloat(document.getElementById('sale-amount').value);
-  const tank = document.getElementById('sale-tank').value;
-  if (!liters || liters <= 0) { toast('Ingresa los litros surtidos', '⚠️'); return; }
-  if (!amount || amount <= 0) { toast('Ingresa el monto cobrado', '⚠️'); return; }
-  saleState.saleData = { liters, amount, tank };
-  renderSaleStep3();
+function goStep3(){
+  const lit=parseFloat(document.getElementById('slit').value);
+  const amt=parseFloat(document.getElementById('samt').value);
+  const tank=document.getElementById('stank').value;
+  if(!lit||lit<=0){toast('Ingresa los litros surtidos','⚠️');return;}
+  if(!amt||amt<=0){toast('Ingresa el monto cobrado','⚠️');return;}
+  SS.data={lit,amt,tank}; step3();
 }
 
-// STEP 3: Confirmar
-function renderSaleStep3() {
-  updateSteps(3);
-  const c = document.getElementById('sale-step-content');
-  const cl = saleState.client;
-  const sd = saleState.saleData;
-  c.innerHTML = `
+/* STEP 3 */
+function step3(){
+  dots(3);
+  const cl=SS.client,d=SS.data;
+  document.getElementById('sale-body').innerHTML=`
     <div class="modal-step">Paso 3 de 3</div>
     <div class="modal-title">✅ Confirmar venta</div>
-    <div class="card" style="background:var(--bg3)">
-      <div class="history-row"><span class="history-label">Cliente</span><span class="history-val">${cl.ref}</span></div>
-      <div class="history-row"><span class="history-label">Tanque</span><span class="history-val">${sd.tank} L</span></div>
-      <div class="history-row"><span class="history-label">Litros</span><span class="history-val">${sd.liters} L</span></div>
-      <div class="history-row"><span class="history-label">Monto</span><span class="history-val" style="color:var(--accent);font-size:1.1rem">${fmt(sd.amount)}</span></div>
-      <div class="history-row"><span class="history-label">Hora</span><span class="history-val">${new Date().toLocaleTimeString('es-MX', {hour:'2-digit',minute:'2-digit'})}</span></div>
-    </div>
-    <div class="btn-row mt-2">
-      <button class="btn btn-secondary" onclick="renderSaleStep2()">← Editar</button>
-      <button class="btn btn-green" onclick="saveSale()">💾 Guardar</button>
-    </div>`;
+    <div class="card" style="margin-bottom:16px"><div class="card-p">
+      <div class="hrow"><span class="hlbl">Cliente</span><span class="hval">${cl.ref}</span></div>
+      <div class="hrow"><span class="hlbl">Tanque</span><span class="hval">${d.tank} L</span></div>
+      <div class="hrow"><span class="hlbl">Litros surtidos</span><span class="hval">${d.lit} L</span></div>
+      <div class="hrow"><span class="hlbl">Monto cobrado</span><span class="hval t-acc" style="font-size:1.05rem">${fmt(d.amt)}</span></div>
+      <div class="hrow"><span class="hlbl">Hora</span><span class="hval">${new Date().toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'})}</span></div>
+    </div></div>
+    <div class="btn-row"><button class="btn btn-s" onclick="step2()">← Editar</button><button class="btn btn-g" onclick="saveSale()">💾 Guardar venta</button></div>`;
 }
 
-function saveSale() {
-  const cl = saleState.client;
-  const sd = saleState.saleData;
-  const sale = {
-    id: uid(),
-    clientId: cl.id,
-    tank: sd.tank,
-    liters: sd.liters,
-    amount: sd.amount,
-    date: new Date().toISOString(),
-  };
-  DB.sales.push(sale);
-  save();
-  closeSaleModal();
-  toast('Venta guardada — ' + fmt(sd.amount), '✅');
-  renderDashboard();
+function saveSale(){
+  const s={id:uid(),clientId:SS.client.id,tank:SS.data.tank,liters:SS.data.lit,amount:SS.data.amt,date:new Date().toISOString()};
+  DB.sales.push(s); save();
+  closeM('m-sale'); toast('Venta guardada — '+fmt(s.amount),'✅');
+  renderDash();
 }
 
-// ===== EXPENSE MODAL =====
-function openExpenseModal() {
-  document.getElementById('expense-modal').classList.add('open');
-}
-function saveExpense() {
-  const type = document.getElementById('exp-type').value;
-  const amount = parseFloat(document.getElementById('exp-amount').value);
-  const note = document.getElementById('exp-note').value.trim();
-  if (!amount || amount <= 0) { toast('Ingresa el monto del gasto', '⚠️'); return; }
-  DB.expenses.push({ id: uid(), type, amount, note, date: new Date().toISOString() });
-  save();
-  closeModal('expense-modal');
-  document.getElementById('exp-amount').value = '';
-  document.getElementById('exp-note').value = '';
-  toast('Gasto registrado', '💸');
-  renderExpenses();
-  renderDashboard();
+/* ── EXPENSE MODAL ── */
+function openExp(){ document.getElementById('m-exp').classList.add('open'); }
+function saveExp(){
+  const type=document.getElementById('etype').value;
+  const amt=parseFloat(document.getElementById('eamt').value);
+  const note=document.getElementById('enote').value.trim();
+  if(!amt||amt<=0){toast('Ingresa el monto','⚠️');return;}
+  DB.expenses.push({id:uid(),type,amount:amt,note,date:new Date().toISOString()});
+  save(); closeM('m-exp');
+  document.getElementById('eamt').value=''; document.getElementById('enote').value='';
+  toast('Gasto registrado','💸'); renderExp(); renderDash();
 }
 
-// ===== DETAIL MODALS =====
-function showSaleDetail(id) {
-  const s = DB.sales.find(x => x.id === id);
-  if (!s) return;
-  const c = DB.clients.find(cl => cl.id === s.clientId);
-  document.getElementById('cd-title').textContent = '⛽ Detalle de venta';
-  document.getElementById('cd-content').innerHTML = `
-    <div class="card" style="background:var(--bg3)">
-      <div class="history-row"><span class="history-label">Cliente</span><span class="history-val">${c ? c.ref : 'Desconocido'}</span></div>
-      <div class="history-row"><span class="history-label">Tanque</span><span class="history-val">${s.tank} L</span></div>
-      <div class="history-row"><span class="history-label">Litros</span><span class="history-val">${s.liters} L</span></div>
-      <div class="history-row"><span class="history-label">Monto</span><span class="history-val" style="color:var(--accent)">${fmt(s.amount)}</span></div>
-      <div class="history-row"><span class="history-label">Fecha</span><span class="history-val">${fmtDate(s.date)}</span></div>
-      <div class="history-row"><span class="history-label">Hora</span><span class="history-val">${fmtTime(s.date)}</span></div>
-      ${c ? `<div class="history-row"><span class="history-label">Coordenadas</span><span class="history-val" style="font-size:0.72rem">${c.lat.toFixed(5)}, ${c.lon.toFixed(5)}</span></div>` : ''}
-    </div>`;
-  document.getElementById('client-detail-modal').classList.add('open');
+/* ── DETAIL MODALS ── */
+function detSale(id){
+  const s=DB.sales.find(x=>x.id===id); if(!s) return;
+  const c=DB.clients.find(cl=>cl.id===s.clientId);
+  document.getElementById('det-title').textContent='⛽ Detalle de venta';
+  document.getElementById('det-body').innerHTML=`<div class="card"><div class="card-p">
+    <div class="hrow"><span class="hlbl">Cliente</span><span class="hval">${c?c.ref:'Desconocido'}</span></div>
+    <div class="hrow"><span class="hlbl">Tanque</span><span class="hval">${s.tank} L</span></div>
+    <div class="hrow"><span class="hlbl">Litros</span><span class="hval">${s.liters} L</span></div>
+    <div class="hrow"><span class="hlbl">Monto</span><span class="hval t-acc" style="font-size:1.05rem">${fmt(s.amount)}</span></div>
+    <div class="hrow"><span class="hlbl">Fecha</span><span class="hval">${fmtD(s.date)}</span></div>
+    <div class="hrow"><span class="hlbl">Hora</span><span class="hval">${fmtT(s.date)}</span></div>
+    ${c?`<div class="hrow"><span class="hlbl">GPS</span><span class="hval t-xs">${c.lat.toFixed(5)}, ${c.lon.toFixed(5)}</span></div>`:''}
+  </div></div>`;
+  document.getElementById('m-det').classList.add('open');
 }
 
-function showClientDetail(id) {
-  const c = DB.clients.find(x => x.id === id);
-  if (!c) return;
-  const sales = DB.sales.filter(s => s.clientId === c.id);
-  const total = sales.reduce((s, v) => s + Number(v.amount), 0);
-  const totalL = sales.reduce((s, v) => s + Number(v.liters), 0);
-  document.getElementById('cd-title').textContent = '📍 ' + c.ref;
-  document.getElementById('cd-content').innerHTML = `
-    <div class="card" style="background:var(--bg3)">
-      <div class="history-row"><span class="history-label">Referencia</span><span class="history-val">${c.ref}</span></div>
-      <div class="history-row"><span class="history-label">Lat, Lon</span><span class="history-val" style="font-size:0.72rem">${c.lat.toFixed(6)}, ${c.lon.toFixed(6)}</span></div>
-      <div class="history-row"><span class="history-label">Visitas</span><span class="history-val">${sales.length}</span></div>
-      <div class="history-row"><span class="history-label">Total facturado</span><span class="history-val" style="color:var(--accent)">${fmt(total)}</span></div>
-      <div class="history-row"><span class="history-label">Total litros</span><span class="history-val">${totalL.toFixed(1)} L</span></div>
-      <div class="history-row"><span class="history-label">Registrado</span><span class="history-val">${fmtDate(c.createdAt)}</span></div>
-    </div>
-    <div class="sec-title" style="margin-top:12px">Últimas visitas</div>
-    ${[...sales].reverse().slice(0, 5).map(s => `
-      <div class="sale-item" style="margin-bottom:6px">
-        <div class="sale-dot" style="font-size:0.9rem">⛽</div>
-        <div class="sale-info"><div class="sale-ref">${fmtDate(s.date)}</div><div class="sale-meta">${fmtTime(s.date)} · ${s.liters} L</div></div>
-        <div class="sale-amount"><div class="sale-mxn">${fmt(s.amount)}</div></div>
-      </div>`).join('') || '<div class="text-muted text-sm">Sin ventas registradas.</div>'}`;
-  document.getElementById('client-detail-modal').classList.add('open');
+function detClient(id){
+  const c=DB.clients.find(x=>x.id===id); if(!c) return;
+  const sl=DB.sales.filter(s=>s.clientId===c.id);
+  const tot=sl.reduce((a,v)=>a+Number(v.amount),0);
+  const lit=sl.reduce((a,v)=>a+Number(v.liters),0);
+  document.getElementById('det-title').textContent='📍 '+c.ref;
+  document.getElementById('det-body').innerHTML=`
+    <div class="card" style="margin-bottom:12px"><div class="card-p">
+      <div class="hrow"><span class="hlbl">Referencia</span><span class="hval">${c.ref}</span></div>
+      <div class="hrow"><span class="hlbl">Coordenadas</span><span class="hval t-xs">${c.lat.toFixed(6)}, ${c.lon.toFixed(6)}</span></div>
+      <div class="hrow"><span class="hlbl">Visitas</span><span class="hval">${sl.length}</span></div>
+      <div class="hrow"><span class="hlbl">Total facturado</span><span class="hval t-acc">${fmt(tot)}</span></div>
+      <div class="hrow"><span class="hlbl">Total litros</span><span class="hval">${lit.toFixed(1)} L</span></div>
+      <div class="hrow"><span class="hlbl">Registrado</span><span class="hval">${fmtD(c.createdAt)}</span></div>
+    </div></div>
+    <div class="sec-title" style="margin-top:4px">Últimas visitas</div>
+    <div class="card">${[...sl].reverse().slice(0,5).map(s=>`
+      <div class="list-item" style="cursor:default">
+        <div class="item-icon">⛽</div>
+        <div class="item-info"><div class="item-title">${fmtD(s.date)}</div><div class="item-sub">${fmtT(s.date)} · ${s.liters}L</div></div>
+        <div class="item-right"><div class="item-mxn">${fmt(s.amount)}</div></div>
+      </div>`).join('')||'<div class="card-p t-mut t-sm">Sin ventas registradas</div>'}</div>`;
+  document.getElementById('m-det').classList.add('open');
 }
 
-// ===== CLICK OUTSIDE MODALS =====
-document.querySelectorAll('.modal-overlay').forEach(overlay => {
-  overlay.addEventListener('click', e => {
-    if (e.target === overlay) overlay.classList.remove('open');
-  });
-});
+/* ── CLOSE ON BACKDROP ── */
+document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');}));
 
-// ===== INIT =====
-renderDashboard();
-
-// Add demo data on first run
-if (DB.sales.length === 0 && DB.clients.length === 0) {
-  const demoClients = [
-    { id: 'c1', lat: 20.5888, lon: -100.3899, ref: 'Casa amarilla esquina', createdAt: new Date(Date.now() - 86400000*3).toISOString() },
-    { id: 'c2', lat: 20.5875, lon: -100.3910, ref: 'Tienda de abarrotes La Fe', createdAt: new Date(Date.now() - 86400000*2).toISOString() },
-    { id: 'c3', lat: 20.5902, lon: -100.3885, ref: 'Portón negro, 2 pisos', createdAt: new Date(Date.now() - 86400000).toISOString() },
-    { id: 'c4', lat: 20.5860, lon: -100.3920, ref: 'Casa de lámina azul', createdAt: new Date(Date.now() - 86400000*4).toISOString() },
+/* ── DEMO DATA ── */
+if(!DB.sales.length && !DB.clients.length){
+  const dc=[
+    {id:'c1',lat:20.5888,lon:-100.3899,ref:'Casa amarilla — esquina',createdAt:new Date(Date.now()-86400000*3).toISOString()},
+    {id:'c2',lat:20.5875,lon:-100.3910,ref:'Tienda de abarrotes La Fe',createdAt:new Date(Date.now()-86400000*2).toISOString()},
+    {id:'c3',lat:20.5903,lon:-100.3885,ref:'Portón negro, 2 pisos',createdAt:new Date(Date.now()-86400000).toISOString()},
+    {id:'c4',lat:20.5861,lon:-100.3921,ref:'Casa de lámina, frente al árbol',createdAt:new Date(Date.now()-86400000*4).toISOString()},
   ];
-  const demoSales = [
-    { id: 's1', clientId: 'c1', tank: '20', liters: 20, amount: 350, date: new Date(Date.now() - 86400000*2).toISOString() },
-    { id: 's2', clientId: 'c2', tank: '30', liters: 30, amount: 520, date: new Date(Date.now() - 86400000).toISOString() },
-    { id: 's3', clientId: 'c3', tank: '20', liters: 18, amount: 315, date: new Date().toISOString() },
-    { id: 's4', clientId: 'c1', tank: '20', liters: 20, amount: 350, date: new Date().toISOString() },
-    { id: 's5', clientId: 'c4', tank: '45', liters: 45, amount: 780, date: new Date().toISOString() },
+  const ds=[
+    {id:'s1',clientId:'c1',tank:'20',liters:20,amount:350,date:new Date(Date.now()-86400000*2).toISOString()},
+    {id:'s2',clientId:'c2',tank:'30',liters:30,amount:520,date:new Date(Date.now()-86400000).toISOString()},
+    {id:'s3',clientId:'c3',tank:'20',liters:18,amount:315,date:new Date().toISOString()},
+    {id:'s4',clientId:'c1',tank:'20',liters:20,amount:350,date:new Date().toISOString()},
+    {id:'s5',clientId:'c4',tank:'45',liters:45,amount:780,date:new Date().toISOString()},
   ];
-  const demoExp = [
-    { id: 'e1', type: 'gasolina', amount: 200, note: 'Carga mañana', date: new Date().toISOString() },
-  ];
-  DB.clients.push(...demoClients);
-  DB.sales.push(...demoSales);
-  DB.expenses.push(...demoExp);
-  save();
-  renderDashboard();
+  const de=[{id:'e1',type:'gasolina',amount:200,note:'Carga mañana Pemex',date:new Date().toISOString()}];
+  DB.clients.push(...dc); DB.sales.push(...ds); DB.expenses.push(...de); save();
 }
+
+renderDash();
 </script>
 </body>
 </html>
